@@ -24,6 +24,8 @@ spec:
               value: test
             - name: POSTGRES_USER
               value: test
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata/
           image: postgres:13.8
           name: tech-challenge-db
           ports:
