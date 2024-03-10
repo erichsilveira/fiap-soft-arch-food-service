@@ -1,12 +1,7 @@
 package com.fiap.techchallenge.infrastructure.model;
 
 import com.fiap.techchallenge.domain.entity.AdditionalItem;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +9,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
+
+import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "additional_items")
@@ -29,7 +27,7 @@ public class AdditionalItemModel {
             .name(additionalItem.getName())
             .description(additionalItem.getDescription())
             .price(additionalItem.getPrice())
-            .productCategoryId(additionalItem.getProductCategoryId())
+            .productCategory(ProductCategoryModel.builder().id(additionalItem.getProductCategoryId()).build())
             .createdAt(additionalItem.getCreatedAt())
             .updatedAt(additionalItem.getUpdatedAt())
             .build();
@@ -41,7 +39,7 @@ public class AdditionalItemModel {
             .name(additionalItemModel.getName())
             .description(additionalItemModel.getDescription())
             .price(additionalItemModel.getPrice())
-            .productCategoryId(additionalItemModel.getProductCategoryId())
+            .productCategoryId(additionalItemModel.getProductCategory().getId())
             .createdAt(additionalItemModel.getCreatedAt())
             .updatedAt(additionalItemModel.getUpdatedAt())
             .build();
@@ -58,7 +56,9 @@ public class AdditionalItemModel {
 
     private BigDecimal price;
 
-    private String productCategoryId;
+    @ManyToOne
+    @PrimaryKeyJoinColumn
+    private ProductCategoryModel productCategory;
 
     @CreationTimestamp
     private ZonedDateTime createdAt;

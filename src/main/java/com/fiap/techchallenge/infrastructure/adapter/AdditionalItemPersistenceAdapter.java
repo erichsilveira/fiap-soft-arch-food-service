@@ -3,6 +3,7 @@ package com.fiap.techchallenge.infrastructure.adapter;
 import com.fiap.techchallenge.domain.entity.AdditionalItem;
 import com.fiap.techchallenge.domain.repository.AdditionalItemRepository;
 import com.fiap.techchallenge.infrastructure.model.AdditionalItemModel;
+import com.fiap.techchallenge.infrastructure.model.ProductCategoryModel;
 import com.fiap.techchallenge.infrastructure.persistence.AdditionalItemJpaRepository;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class AdditionalItemPersistenceAdapter implements AdditionalItemRepositor
         var filter = AdditionalItemModel.builder();
 
         if (StringUtils.isNotBlank(productCategoryId)) {
-            filter.productCategoryId(productCategoryId);
+            filter.productCategory(ProductCategoryModel.builder().id(productCategoryId).build());
         }
 
         var entities = springDataRepository.findAll(Example.of(filter.build()),

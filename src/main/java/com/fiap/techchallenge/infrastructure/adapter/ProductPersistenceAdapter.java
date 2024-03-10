@@ -3,6 +3,7 @@ package com.fiap.techchallenge.infrastructure.adapter;
 import com.fiap.techchallenge.domain.entity.Product;
 import com.fiap.techchallenge.domain.repository.ProductRepository;
 import com.fiap.techchallenge.exception.ResourceNotFoundException;
+import com.fiap.techchallenge.infrastructure.model.ProductCategoryModel;
 import com.fiap.techchallenge.infrastructure.model.ProductModel;
 import com.fiap.techchallenge.infrastructure.persistence.ProductJpaRepository;
 import io.micrometer.common.util.StringUtils;
@@ -33,7 +34,7 @@ public class ProductPersistenceAdapter implements ProductRepository {
         var filter = ProductModel.builder();
 
         if (StringUtils.isNotBlank(productCategoryId)) {
-            filter.productCategoryId(productCategoryId);
+            filter.productCategory(ProductCategoryModel.builder().id(productCategoryId).build());
         }
 
         var entities = springDataRepository.findAll(Example.of(filter.build()),

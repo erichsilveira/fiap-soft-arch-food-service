@@ -1,12 +1,7 @@
 package com.fiap.techchallenge.infrastructure.model;
 
 import com.fiap.techchallenge.domain.entity.Product;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +9,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
+
+import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "products")
@@ -29,7 +27,7 @@ public class ProductModel {
             .name(product.getName())
             .description(product.getDescription())
             .price(product.getPrice())
-            .productCategoryId(product.getProductCategoryId())
+            .productCategory(ProductCategoryModel.builder().id(product.getProductCategoryId()).build())
             .createdAt(product.getCreatedAt())
             .updatedAt(product.getUpdatedAt())
             .build();
@@ -41,7 +39,7 @@ public class ProductModel {
             .name(productModel.getName())
             .description(productModel.getDescription())
             .price(productModel.getPrice())
-            .productCategoryId(productModel.getProductCategoryId())
+            .productCategoryId(productModel.getProductCategory().getId())
             .createdAt(productModel.getCreatedAt())
             .updatedAt(productModel.getUpdatedAt())
             .build();
@@ -58,7 +56,9 @@ public class ProductModel {
 
     private BigDecimal price;
 
-    private String productCategoryId;
+    @ManyToOne
+    @PrimaryKeyJoinColumn
+    private ProductCategoryModel productCategory;
 
     @CreationTimestamp
     private ZonedDateTime createdAt;

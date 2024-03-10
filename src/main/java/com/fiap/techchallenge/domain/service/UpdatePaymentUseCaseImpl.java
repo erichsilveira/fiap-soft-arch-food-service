@@ -49,7 +49,7 @@ public class UpdatePaymentUseCaseImpl implements UpdatePaymentUseCase {
 
         if (paymentStatus.equals(PaymentStatus.APPROVED)) {
             updateOrderUseCase.updateOrder(
-                new UpdateOrderCommand(paymentId, OrderStatus.REQUESTED));
+                new UpdateOrderCommand(currentPayment.getOrderId(), OrderStatus.REQUESTED));
         }
     }
 }

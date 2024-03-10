@@ -4,6 +4,7 @@ import com.fiap.techchallenge.domain.entity.Payment;
 import com.fiap.techchallenge.domain.entity.PaymentStatus;
 import com.fiap.techchallenge.domain.repository.PaymentRepository;
 import com.fiap.techchallenge.infrastructure.model.PaymentModel;
+import com.fiap.techchallenge.infrastructure.persistence.OrderJpaRepository;
 import com.fiap.techchallenge.infrastructure.persistence.PaymentJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,8 @@ public class PaymentPersistenceAdapter implements PaymentRepository {
 
     private final PaymentJpaRepository springDataRepository;
 
+    private final OrderJpaRepository orderJpaRepository;
+
     @Override
     public Payment getPayment(String paymentId) {
         var model = springDataRepository.findById(paymentId)
@@ -26,14 +29,16 @@ public class PaymentPersistenceAdapter implements PaymentRepository {
 
 
     @Override
-    public void createPayment(String paymentId, BigDecimal orderPrice) {
+    public Payment createPayment(String orderId, BigDecimal orderPrice) {
         var model = PaymentModel.builder()
-            .id(paymentId)
+            .order(orderJpaRepository.findById(orderId).orElseThrow())
             .orderPrice(orderPrice)
             .status(PaymentStatus.CREATED)
             .build();
 
         springDataRepository.save(model);
+
+        return PaymentModel.toPayment(model);
     }
 
     @Override
