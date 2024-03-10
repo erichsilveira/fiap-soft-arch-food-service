@@ -1,12 +1,12 @@
 package com.fiap.techchallenge.domain.entity;
 
-import java.math.BigDecimal;
-import java.time.ZonedDateTime;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.ZonedDateTime;
+
 @Builder
-public class Payment {
+public class OrderProduct {
 
     @Getter
     private final String id;
@@ -15,18 +15,11 @@ public class Payment {
     private final String orderId;
 
     @Getter
-    private BigDecimal orderPrice;
-
-    @Getter
-    private PaymentStatus status;
+    private final String productId;
 
     @Getter
     private ZonedDateTime createdAt;
 
     @Getter
     private ZonedDateTime updatedAt;
-
-    public boolean canUpdate() {
-        return status == PaymentStatus.CREATED || status == PaymentStatus.REJECTED;
-    }
 }

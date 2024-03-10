@@ -90,7 +90,7 @@ public class OrderController {
         return new ResponseEntity<>(domainEntity.getId(), HttpStatus.CREATED);
     }
 
-    @PostMapping("/payment")
+    @PostMapping("/payments")
     ResponseEntity paymentWebhook(
         @RequestBody @Valid PaymentWebhookUpdateRequest webhookUpdateRequest) {
         updatePaymentUseCase.paymentWebhook(
@@ -99,7 +99,7 @@ public class OrderController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/payment/{id}")
+    @GetMapping("/payments/{id}")
     ResponseEntity<Payment> searchOrderPaymentStatus(
         @PathVariable String id) throws ResourceNotFoundException {
         var domainEntity = searchPaymentUseCase.searchPayment(id);

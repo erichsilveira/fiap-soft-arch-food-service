@@ -2,10 +2,7 @@ package com.fiap.techchallenge.infrastructure.model;
 
 import com.fiap.techchallenge.domain.entity.Order;
 import com.fiap.techchallenge.domain.entity.OrderStatus;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
+
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -28,28 +26,30 @@ public class OrderModel {
 
     public static OrderModel toOrderModel(Order order) {
         return OrderModel.builder()
-            .id(order.getId())
-            .productsId(order.getProductsId())
-            .orderPrice(order.getOrderPrice())
-            .status(order.getStatus())
-            .customerId(order.getCustomerId())
-            .customerCpf(order.getCustomerCpf())
-            .createdAt(order.getCreatedAt())
-            .updatedAt(order.getUpdatedAt())
-            .build();
+                .id(order.getId())
+                .products(order.getProductsId().stream().map(productId ->
+                        OrderProductModel.builder().product(ProductModel.builder().id(productId).build())
+                                .order(OrderModel.builder().id(order.getId()).build()).build()).toList())
+                .orderPrice(order.getOrderPrice())
+                .status(order.getStatus())
+                .customer(CustomerModel.builder().id(order.getCustomerId()).build())
+                .customerCpf(order.getCustomerCpf())
+                .createdAt(order.getCreatedAt())
+                .updatedAt(order.getUpdatedAt())
+                .build();
     }
 
     public static Order toOrder(OrderModel orderModel) {
         return Order.builder()
-            .id(orderModel.getId())
-            .productsId(orderModel.getProductsId())
-            .orderPrice(orderModel.getOrderPrice())
-            .status(orderModel.getStatus())
-            .customerId(orderModel.getCustomerId())
-            .customerCpf(orderModel.getCustomerCpf())
-            .createdAt(orderModel.getCreatedAt())
-            .updatedAt(orderModel.getUpdatedAt())
-            .build();
+                .id(orderModel.getId())
+                .productsId(orderModel.getProducts().stream().map(orderProductModel -> orderProductModel.getProduct().getId()).toList())
+                .orderPrice(orderModel.getOrderPrice())
+                .status(orderModel.getStatus())
+                .customerId(orderModel.getCustomer().getId())
+                .customerCpf(orderModel.getCustomerCpf())
+                .createdAt(orderModel.getCreatedAt())
+                .updatedAt(orderModel.getUpdatedAt())
+                .build();
     }
 
     @Id
@@ -57,13 +57,16 @@ public class OrderModel {
     @UuidGenerator
     private String id;
 
-    private List<String> productsId;
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<OrderProductModel> products;
 
     private BigDecimal orderPrice;
 
     private OrderStatus status;
 
-    private String customerId;
+    @ManyToOne
+    @PrimaryKeyJoinColumn
+    private CustomerModel customer;
 
     private String customerCpf;
 

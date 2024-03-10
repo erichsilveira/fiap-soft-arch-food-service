@@ -22,13 +22,13 @@ public class CreatePaymentUseCaseImpl implements CreatePaymentUseCase {
         log.info("Creating payment for orderId {} orderPrice {}",
             orderId, orderPrice);
 
-        paymentRepository.createPayment(orderId, orderPrice);
+        var payment = paymentRepository.createPayment(orderId, orderPrice);
 
         // start a payment timer process to simulate a payment
-        simulateCustomerPayment(orderId);
+        simulateCustomerPayment(payment.getId());
     }
 
-    private void simulateCustomerPayment(String orderId) {
+    private void simulateCustomerPayment(String paymentId) {
         Thread thread = new Thread(() -> {
             try {
                 Thread.sleep(1000);
@@ -36,7 +36,7 @@ public class CreatePaymentUseCaseImpl implements CreatePaymentUseCase {
                 // get random between boolean
                 boolean success = Math.random() < 0.5;
 
-                updatePaymentUseCase.paymentWebhook(orderId, success);
+                updatePaymentUseCase.paymentWebhook(paymentId, success);
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
