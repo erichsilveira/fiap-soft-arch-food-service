@@ -49,6 +49,10 @@ jobs:
         env:
           ECR_REGISTRY: https://registry.hub.docker.com/v2/
           IMAGE_TAG: erich852/tech-challenge:latest
-        run: |
-          kubectl apply -f manifests/food-service-backend-deployment.yaml
+        run: |          
+          kubectl apply -f manifests/postgres-service.yaml
+          kubectl apply -f manifests/postgres-deployment.yaml
+          kubectl apply -f manifests/postgres-data-persistentvolumeclaim.yaml
           kubectl apply -f manifests/food-service-backend-service.yaml
+          kubectl apply -f manifests/food-service-backend-deployment.yaml
+          kubectl apply -f manifests/food-service-backend-autosacling.yaml
