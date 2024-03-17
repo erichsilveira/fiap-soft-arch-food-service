@@ -26,7 +26,6 @@ Pos Tech FIAP project
 
 ![image](./docs/arch.png)
 
-
 ## Dependencies
 - Open JDK 17 - Recommended: [Amazon Corretto](https://docs.aws.amazon.com/corretto/latest/corretto-17-ug/downloads-list.html)
 - [Docker](https://docs.docker.com/get-docker/)
